@@ -1,5 +1,7 @@
 package br.com.gwelter.smack
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
@@ -11,6 +13,9 @@ import android.view.MenuItem
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import android.content.Context.INPUT_METHOD_SERVICE
+import android.view.inputmethod.InputMethodManager
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,7 +30,17 @@ class MainActivity : AppCompatActivity() {
         toggle.syncState()
     }
 
+    private fun hideKeyboard(){
+        val view = this.currentFocus
+        if (view != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+
     override fun onBackPressed() {
+        hideKeyboard()
+
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
@@ -34,7 +49,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun logginButtonNavClick(view: View) {
-
+        val loginIntent = Intent(this, LoginActivity::class.java)
+        startActivity(loginIntent)
     }
 
     fun addChannelClick(view: View) {
