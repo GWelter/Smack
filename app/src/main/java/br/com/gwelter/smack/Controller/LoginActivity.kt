@@ -1,9 +1,10 @@
-package br.com.gwelter.smack
+package br.com.gwelter.smack.Controller
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import br.com.gwelter.smack.R
 
 class LoginActivity : AppCompatActivity() {
 
