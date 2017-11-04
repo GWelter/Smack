@@ -2,6 +2,7 @@ package br.com.gwelter.smack.Services
 
 import android.content.Context
 import android.util.Log
+import br.com.gwelter.smack.Utilities.URL_CREATE_USER
 import br.com.gwelter.smack.Utilities.URL_LOGIN
 import br.com.gwelter.smack.Utilities.URL_REGISTER
 import com.android.volley.Response
@@ -78,5 +79,48 @@ object AuthService {
         }
 
         Volley.newRequestQueue(context).add(loginRequest)
+    }
+
+    fun createUser(context: Context, name: String, email: String, avatarName: String, avatarColor: String, complete: (Boolean) -> Unit) {
+        val jsonBody = JSONObject()
+        jsonBody.put("email", email)
+        jsonBody.put("name", name)
+        jsonBody.put("avatarName", avatarName)
+        jsonBody.put("avatarColor", avatarColor)
+        val requestBody = jsonBody.toString()
+
+        val createUserRequest = object : JsonObjectRequest(Method.POST, URL_CREATE_USER, null, Response.Listener { response ->
+            try {
+                UserDataService.id = response.getString("_id")
+                UserDataService.name = response.getString("name")
+                UserDataService.email = response.getString("email")
+                UserDataService.avatarColor = response.getString("avatarColor")
+                UserDataService.avatarName = response.getString("avatarName")
+
+                complete(true)
+            } catch (e: JSONException) {
+                Log.d("JSON", "EXC " + e.localizedMessage)
+                complete(false)
+            }
+        }, Response.ErrorListener { error ->
+            Log.d("ERROR", "could not add user: $error")
+            complete(false)
+        }) {
+            override fun getBodyContentType(): String {
+                return "Application/json; charset=utf-8"
+            }
+
+            override fun getBody(): ByteArray {
+                return requestBody.toByteArray()
+            }
+
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers.put("Authorization", "Bearer $authToken")
+                return headers
+            }
+        }
+
+        Volley.newRequestQueue(context).add(createUserRequest)
     }
 }

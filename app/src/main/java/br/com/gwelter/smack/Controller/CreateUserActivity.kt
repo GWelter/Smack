@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import br.com.gwelter.smack.R
 import br.com.gwelter.smack.Services.AuthService
+import br.com.gwelter.smack.Services.UserDataService
 import kotlinx.android.synthetic.main.activity_create_user.*
 import java.util.*
 
@@ -57,7 +58,12 @@ class CreateUserActivity : AppCompatActivity() {
             println(completeRegistration)
             if(completeRegistration){
                 AuthService.loginUser(this, email, password) { completeLogin ->
-                    println(completeLogin)
+                    AuthService.createUser(this, userName, email, userAvatar, avatarColor) { completeCreation ->
+                        println(UserDataService.avatarName)
+                        println(UserDataService.avatarColor)
+                        println(UserDataService.name)
+                        finish()
+                    }
                 }
             }
         }
