@@ -17,7 +17,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        app:layout_constraintBottom_toTopOf="@+id/logginButtonNavHeader"
+        app:layout_constraintBottom_toTopOf="@+id/loginButtonNavHeader"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/profiledefault" />
 
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Guilherme Welter"
+        android:text="Please Login"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintStart_toEndOf="@+id/userImageNavHeader"
         app:layout_constraintTop_toTopOf="@+id/userImageNavHeader"
@@ -39,18 +39,17 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="guilherme.a.welter@gmail.com"
         app:layout_constraintStart_toEndOf="@+id/userImageNavHeader"
         app:layout_constraintTop_toBottomOf="@+id/userNameNavHeader"
         tools:text="guilherme.a.welter@gmail.com" />
 
     <Button
-        android:id="@+id/logginButtonNavHeader"
+        android:id="@+id/loginButtonNavHeader"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_marginBottom="8dp"
         android:background="@android:color/transparent"
-        android:onClick="logginButtonNavClick"
+        android:onClick="loginButtonNavClick"
         android:padding="5dp"
         android:text="LogIn"
         android:textAlignment="center"

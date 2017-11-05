@@ -22,8 +22,11 @@ class LoginActivity : AppCompatActivity() {
         AuthService.loginUser(this, email, password) { loginSuccess ->
             println(loginSuccess)
             if(loginSuccess){
-                println(AuthService.authToken)
-                println(AuthService.userEmail)
+                AuthService.findUserByEmail(this) { findUserSuccess ->
+                    if(findUserSuccess) {
+                        finish()
+                    }
+                }
             }
         }
     }
@@ -31,5 +34,6 @@ class LoginActivity : AppCompatActivity() {
     fun loginCreateUserButtonClick(view: View) {
         val createUserIntent = Intent(this, CreateUserActivity::class.java)
         startActivity(createUserIntent)
+        finish()
     }
 }
