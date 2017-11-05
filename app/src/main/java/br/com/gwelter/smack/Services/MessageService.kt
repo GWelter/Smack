@@ -2,6 +2,7 @@ package br.com.gwelter.smack.Services
 
 import android.content.Context
 import android.util.Log
+import br.com.gwelter.smack.Controller.App
 import br.com.gwelter.smack.Model.ChatChannel
 import br.com.gwelter.smack.Utilities.URL_GET_CHANNELS
 import com.android.volley.Response
@@ -16,7 +17,7 @@ object MessageService {
 
     val channels = ArrayList<ChatChannel>()
 
-    fun getChannels(context: Context, complete: (Boolean) -> Unit) {
+    fun getChannels(complete: (Boolean) -> Unit) {
 
         val channelsRequest = object : JsonArrayRequest(Method.GET, URL_GET_CHANNELS, null, Response.Listener { response ->
             try {
@@ -44,11 +45,11 @@ object MessageService {
 
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
-                headers.put("Authorization", "Bearer ${AuthService.authToken}")
+                headers.put("Authorization", "Bearer ${App.sharedPreferences.authToken}")
                 return headers
             }
         }
 
-        Volley.newRequestQueue(context).add(channelsRequest)
+        App.sharedPreferences.requestQueue.add(channelsRequest)
     }
 }

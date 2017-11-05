@@ -63,13 +63,13 @@ class CreateUserActivity : AppCompatActivity() {
 
         if(userName.isNotEmpty() && password.length > 5 && email.isNotEmpty()) {
 
-            AuthService.registerUser(this, email, password) { completeRegistration ->
+            AuthService.registerUser(email, password) { completeRegistration ->
 
                 if (completeRegistration) {
-                    AuthService.loginUser(this, email, password) { completeLogin ->
+                    AuthService.loginUser(email, password) { completeLogin ->
 
                         if (completeLogin) {
-                            AuthService.createUser(this, userName, email, userAvatar, avatarColor) { completeCreation ->
+                            AuthService.createUser(userName, email, userAvatar, avatarColor) { completeCreation ->
 
                                 if (completeCreation) {
 

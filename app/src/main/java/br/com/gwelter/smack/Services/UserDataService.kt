@@ -1,6 +1,7 @@
 package br.com.gwelter.smack.Services
 
 import android.graphics.Color
+import br.com.gwelter.smack.Controller.App
 import java.util.*
 
 /**
@@ -41,8 +42,8 @@ object UserDataService {
         email = ""
         name = ""
 
-        AuthService.authToken = ""
-        AuthService.userEmail = ""
-        AuthService.isLoggedIn = false
+        App.sharedPreferences.authToken = ""
+        App.sharedPreferences.userEmail = ""
+        App.sharedPreferences.isLogedIn = false
     }
 }

@@ -54,6 +54,10 @@ class MainActivity : AppCompatActivity() {
         socket.on("channelCreated", onNewChannel)
 
         setUpAdapter()
+
+        if(App.sharedPreferences.isLogedIn){
+            AuthService.findUserByEmail(this){}
+        }
     }
 
     override fun onResume() {
@@ -74,7 +78,7 @@ class MainActivity : AppCompatActivity() {
 
     private val userDataChangeReciver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
-            if(AuthService.isLoggedIn) {
+            if(App.sharedPreferences.isLogedIn) {
                 userNameNavHeader.text = UserDataService.name
                 userEmailNavHeader.text = UserDataService.email
 
@@ -84,7 +88,7 @@ class MainActivity : AppCompatActivity() {
 
                 loginButtonNavHeader.text = "Logout"
 
-                MessageService.getChannels(context) { complete ->
+                MessageService.getChannels { complete ->
                     if(complete) {
                         //Notifica a mudança de dados para o adapter
                         channelAdapter.notifyDataSetChanged()
@@ -95,7 +99,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showUserData() {
-        if(AuthService.isLoggedIn) {
+        if(App.sharedPreferences.isLogedIn) {
             userNameNavHeader.text = UserDataService.name
             userEmailNavHeader.text = UserDataService.email
 
@@ -126,7 +130,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun loginButtonNavClick(view: View) {
-        if(AuthService.isLoggedIn) {
+        if(App.sharedPreferences.isLogedIn) {
             UserDataService.logout()
             userNameNavHeader.text = "Please login"
             userEmailNavHeader.text = ""
@@ -140,7 +144,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun addChannelClick(view: View) {
-        if(AuthService.isLoggedIn){
+        if(App.sharedPreferences.isLogedIn){
             val alertBuilder = AlertDialog.Builder(this)
             val dialogView = layoutInflater.inflate(R.layout.add_channel_dialog, null)
 
