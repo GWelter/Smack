@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import br.com.gwelter.smack.Controller.App
 import br.com.gwelter.smack.Model.ChatChannel
+import br.com.gwelter.smack.Model.ChatMessage
 import br.com.gwelter.smack.Utilities.URL_GET_CHANNELS
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonArrayRequest
@@ -16,6 +17,7 @@ import org.json.JSONException
 object MessageService {
 
     val channels = ArrayList<ChatChannel>()
+    val messages = ArrayList<ChatMessage>()
 
     fun getChannels(complete: (Boolean) -> Unit) {
 

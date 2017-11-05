@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import br.com.gwelter.smack.Model.ChatChannel
+import br.com.gwelter.smack.Model.ChatMessage
 import br.com.gwelter.smack.R
 import br.com.gwelter.smack.Services.AuthService
 import br.com.gwelter.smack.Services.MessageService
@@ -26,6 +27,7 @@ import io.socket.client.IO
 import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 
@@ -34,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     val socket = IO.socket(SOCKET_URL)
 
     lateinit var channelAdapter: ArrayAdapter<ChatChannel>
+    var selectedChannel : ChatChannel? = null
 
     private fun setUpAdapter() {
         channelAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, MessageService.channels)
@@ -52,8 +55,14 @@ class MainActivity : AppCompatActivity() {
 
         socket.connect()
         socket.on("channelCreated", onNewChannel)
-
+        socket.on("messageCreated", onNewMessage)
         setUpAdapter()
+
+        channel_list.setOnItemClickListener { parent, view, position, id ->
+            selectedChannel = MessageService.channels[position]
+            drawer_layout.closeDrawer(GravityCompat.START)
+            updateWithChannel()
+        }
 
         if(App.sharedPreferences.isLogedIn){
             AuthService.findUserByEmail(this){}
@@ -90,12 +99,21 @@ class MainActivity : AppCompatActivity() {
 
                 MessageService.getChannels { complete ->
                     if(complete) {
-                        //Notifica a mudança de dados para o adapter
-                        channelAdapter.notifyDataSetChanged()
+                        if(MessageService.channels.count() > 0){
+                            selectedChannel = MessageService.channels[0]
+                            //Notifica a mudança de dados para o adapter
+                            channelAdapter.notifyDataSetChanged()
+                            updateWithChannel()
+                        }
                     }
                 }
             }
         }
+    }
+
+    fun updateWithChannel() {
+        mainChannelName.text = "#${selectedChannel?.name}"
+        //download messages for channel
     }
 
     private fun showUserData() {
@@ -179,7 +197,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun sendMessageButtonClick(view: View) {
+    private val onNewMessage = Emitter.Listener { args ->
+        runOnUiThread {
+            val msgBody = args[0] as String
+            val channelID = args[2] as String
+            val userName = args[3] as String
+            val userAvatar = args[4] as String
+            val userAvatarColor = args[5] as String
+            val id = args[6] as String
+            val timestamp = args[7] as String
 
+            val newMessage = ChatMessage(msgBody, userName, channelID, userAvatar, userAvatarColor, id, timestamp)
+            MessageService.messages.add(newMessage)
+            println(newMessage.message)
+        }
+    }
+
+    fun sendMessageButtonClick(view: View) {
+        if(App.sharedPreferences.isLogedIn && messageTextField.text.isNotEmpty() && selectedChannel != null) {
+            val userID = UserDataService.id
+            val channelID = selectedChannel!!.id
+            socket.emit("newMessage", messageTextField.text.toString(), userID, channelID, UserDataService.name, UserDataService.avatarName, UserDataService.avatarColor)
+            messageTextField.text.clear()
+            hideKeyboard()
+        }
     }
 }
