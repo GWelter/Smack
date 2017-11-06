@@ -19,20 +19,17 @@ object UserDataService {
                 .replace("]", "")
                 .replace(",", "")
 
-        var red = 0
-        var green = 0
-        var blue = 0
-
-        println(strippedColor)
+        var cor = Color.BLACK
 
         val scanner = Scanner(strippedColor)
         if(scanner.hasNextDouble()){
-            red = (scanner.nextDouble() * 255).toInt()
-            green = (scanner.nextDouble() * 255).toInt()
-            blue = (scanner.nextDouble() * 255).toInt()
+            val red = (scanner.nextDouble() * 255).toInt()
+            val green = (scanner.nextDouble() * 255).toInt()
+            val blue = (scanner.nextDouble() * 255).toInt()
+            cor = Color.rgb(red, green, blue)
         }
 
-        return Color.rgb(red, green, blue)
+        return cor
     }
 
     fun logout() {
@@ -45,5 +42,8 @@ object UserDataService {
         App.sharedPreferences.authToken = ""
         App.sharedPreferences.userEmail = ""
         App.sharedPreferences.isLogedIn = false
+
+        MessageService.clearMessages()
+        MessageService.clearChannels()
     }
 }
